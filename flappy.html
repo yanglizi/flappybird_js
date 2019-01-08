@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="bird.js"></script>
+    <script src="load.js"></script>
+    <script src="sky.js"></script>
+    <script src="land.js"></script>
+    <script src="pipe.js"></script>
+    <br>
+</head>
+
+<body>
+    <canvas id="cvs" width="800" height="600" style="border:5px dotted #d3d3d3;"></canvas>
+    <script>
+        var imglist =[
+            {name:"birds",src:"res/birds.png"},
+            {name:"land",src:"res/land.png"},
+            {name:"pipe1",src:"res/pipe1.png"},
+            {name:"pipe2",src:"res/pipe2.png"},
+            {name:"sky",src:"res/sky.png"}
+        ];
+
+        var cvs = document.getElementById("cvs");
+        var ctx = cvs.getContext("2d");
+
+        load(imglist,function(imgElms){
+
+            var mybird = new Bird(imgElms["birds"],150,100,0.0003,0.0006,ctx);
+
+            var mysky1  = new Sky(imgElms["sky"],0,-0.3,ctx);
+            var mysky2  = new Sky(imgElms["sky"],800,-0.3,ctx);
+
+            var myland1  = new Land(imgElms["land"],0,-0.35,ctx);
+            var myland2  = new Land(imgElms["land"],336,-0.35,ctx);
+            var myland3  = new Land(imgElms["land"],336*2,-0.35,ctx);
+            var myland4  = new Land(imgElms["land"],336*3,-0.35,ctx);
+
+            var mypipe1  = new Pipe(imgElms["pipe2"],imgElms["pipe1"],400,-0.1,ctx);
+            var mypipe2  = new Pipe(imgElms["pipe2"],imgElms["pipe1"],600,-0.1,ctx);
+            var mypipe3  = new Pipe(imgElms["pipe2"],imgElms["pipe1"],800,-0.1,ctx);
+            var mypipe4  = new Pipe(imgElms["pipe2"],imgElms["pipe1"],1000,-0.1,ctx);
+            var mypipe5  = new Pipe(imgElms["pipe2"],imgElms["pipe1"],1200,-0.1,ctx);
+
+
+
+            var preTime = Date.now();
+            function run(){
+                var nowTime = Date.now();
+                var dt      = nowTime - preTime;
+                preTime = nowTime;
+                ctx.clearRect(0,0,800,600);
+
+                mysky1.update(dt);
+                mysky1.draw();
+                mysky2.update(dt);
+                mysky2.draw();
+                
+                mypipe1.update(dt);
+                mypipe1.draw();
+                mypipe2.update(dt);
+                mypipe2.draw();
+                mypipe3.update(dt);
+                mypipe3.draw();
+                mypipe4.update(dt);
+                mypipe4.draw();
+                mypipe5.update(dt);
+                mypipe5.draw();
+
+
+                myland1.update(dt);
+                myland1.draw();
+                myland2.update(dt);
+                myland2.draw();
+                myland3.update(dt);
+                myland3.draw();
+                myland4.update(dt);
+                myland4.draw();
+
+                mybird.update(dt);
+                mybird.draw();
+
+                var gameover = false;
+
+                gameover = 
+                    mypipe1.hitTest(mybird.x,mybird.y)||
+                    mypipe2.hitTest(mybird.x,mybird.y)||
+                    mypipe3.hitTest(mybird.x,mybird.y)||
+                    mypipe4.hitTest(mybird.x,mybird.y)||
+                    mypipe5.hitTest(mybird.x,mybird.y)||
+                    gameover
+                
+
+                if(mybird.y < 0  || mybird.y > 600 - 112 - 45/2){
+                    gameover = true;
+                }
+
+                if(!gameover){
+                    requestAnimationFrame(run);
+                }
+                
+                
+                
+                
+            }
+            requestAnimationFrame(run);
+
+            cvs.addEventListener("click",function(){
+                mybird.speed = -0.3;
+            })
+            
+        })
+
+
+        
+        
+
+        // img.onload = function(){
+        //     var mybird = new Bird(img,100,100,0,0,ctx);
+        //     mybird.draw();
+        // }
+            
+        // function aaa(){
+        //     var mybird = new Bird(img,100,100,0,0,ctx);
+        //     mybird.draw();
+        // }
+        
+        // img.addEventListener("load",function(){
+        //     var mybird = new Bird(img,100,100,0,0,ctx);
+        //     mybird.draw();
+        // })
+    </script>
+    <!-- <button onclick="aaa()">aaa</button> -->
+    
+
+</body>
+
+</html>
